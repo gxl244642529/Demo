@@ -1,6 +1,12 @@
 package com.awesomeproject;
 
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
+
 import com.facebook.react.ReactActivity;
+
+import cn.jpush.android.api.JPushInterface;
 
 public class MainActivity extends ReactActivity {
 
@@ -12,4 +18,26 @@ public class MainActivity extends ReactActivity {
     protected String getMainComponentName() {
         return "AwesomeProject";
     }
+
+    @Override
+    public void onCreate( Bundle savedInstanceState) {
+        super.onCreate( savedInstanceState);
+        JPushInterface.init(this);
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        JPushInterface.onPause(this);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        JPushInterface.onResume(this);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
 }

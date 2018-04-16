@@ -19,7 +19,10 @@ import { NavigationActions } from 'react-navigation'
 import Api from '../utils/Http'
 import Swiper from 'react-native-swiper';
 import { NativeModules } from 'react-native';
-const SendMessage = NativeModules.SendMessage;
+// import ShareView from '../../lib/ShareView'
+// const SendMessage = NativeModules.SendMessage;
+import Sharesdk from '../../lib/Sharesdk'
+import JPushModule from 'jpush-react-native';
 class Header extends Component{
   _test=()=>{
     console.log("测试中....")
@@ -67,12 +70,41 @@ export default class  MainScreen extends Component{
     }
   }
   componentDidMount(){
-    // let data = {version:"2700"};
-    // Http.post('m_config/config2700', data)
+    // 新版本必需写回调函数
+    // JPushModule.notifyJSDidLoad();
+    JPushModule.notifyJSDidLoad((resultCode) => {
+          if (resultCode === 0) {}
+    });
+    // 接收自定义消息
+   JPushModule.addReceiveCustomMsgListener((message) => {
+     this.setState({pushMsg: message});
+   });
+   // 接收推送通知
+    JPushModule.addReceiveNotificationListener((message) => {
+      console.log("receive notification: " + message);
+    });
+    // 打开通知
+    JPushModule.addReceiveOpenNotificationListener((map) => {
+      console.log("Opening notification!");
+      console.log("map.extra: " + map.extras);
+      // 可执行跳转操作，也可跳转原生页面
+      // this.props.navigation.navigate("SecondActivity");
+    });
+  }
+  componentWillUnmount() {
+    JPushModule.removeReceiveCustomMsgListener();
+    JPushModule.removeReceiveNotificationListener();
   }
   _onPress=()=>{
     SendMessage.sendMsg("18459150681",(result)=>{
       console.log(result);
+    })
+  }
+  _share=()=>{
+    // this.setState({share:true})
+
+    Sharesdk.share((result)=>{
+      console.log("snfjkashdfdahnf"+result);
     })
   }
           //  <WebView  url="https://www.baidu.com" style={{width:300,height:300}}></WebView>
@@ -94,6 +126,9 @@ export default class  MainScreen extends Component{
               <Image source={card_d1} style={{width:329.5,height:188}} resizeMode="contain"/>
           </ScrollView>
           <TouchableOpacity onPress={this._onPress}><Text>测试发送短信</Text></TouchableOpacity>
+          <TouchableOpacity onPress={this._share}><Text>测试分享</Text></TouchableOpacity>
+          {this.state.share&&<ShareView/>}
+
        </View>
      );
    }

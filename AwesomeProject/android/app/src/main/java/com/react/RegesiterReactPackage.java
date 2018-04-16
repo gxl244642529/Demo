@@ -26,6 +26,7 @@ public class RegesiterReactPackage implements ReactPackage{
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
        List<ViewManager> asList = new ArrayList<>();
         asList.add(new ReactWebViewManager());
+        asList.add( new ShareModule() );
         return asList;
     }
 
@@ -39,6 +40,7 @@ public class RegesiterReactPackage implements ReactPackage{
        List<NativeModule> modules = new ArrayList<>();
         modules.add(new AModule(reactContext));
         modules.add(new SendMessageModule(reactContext));
+        modules.add( new Share(reactContext) );
         return modules;
     }
 

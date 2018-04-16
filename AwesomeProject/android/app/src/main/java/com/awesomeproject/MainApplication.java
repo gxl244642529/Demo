@@ -13,11 +13,15 @@ import com.react.RegesiterReactPackage;
 import java.util.Arrays;
 import java.util.List;
 
+import cn.jpush.reactnativejpush.JPushPackage;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 
 public class MainApplication extends Application implements ReactApplication {
-
+  // 设置为 true 将不弹出 toast
+  private boolean SHUTDOWN_TOAST = false;
+  // 设置为 true 将不打印 log
+  private boolean SHUTDOWN_LOG = false;
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
     public boolean getUseDeveloperSupport() {
@@ -28,7 +32,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-          new RegesiterReactPackage()
+          new RegesiterReactPackage(),
+          new JPushPackage(SHUTDOWN_TOAST, SHUTDOWN_LOG)
       );
     }
 
